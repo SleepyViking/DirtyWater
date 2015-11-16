@@ -1,0 +1,9 @@
+C:\Users\Grandma\Desktop\Programming\Untitled MUD Server Testing\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.exe.config
+C:\Users\Grandma\Desktop\Programming\Untitled MUD Server Testing\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.exe
+C:\Users\Grandma\Desktop\Programming\Untitled MUD Server Testing\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.pdb
+C:\Users\Grandma\Desktop\Programming\Untitled MUD Server Testing\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.exe
+C:\Users\Grandma\Desktop\Programming\Untitled MUD Server Testing\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.pdb
+C:\Users\Grandma\Desktop\Programming\Untitled MUD Server Testing\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.csprojResolveAssemblyReference.cache
+I:\Programming\CS\DirtyWater\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.exe.config
+I:\Programming\CS\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.exe
+I:\Programming\CS\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.pdb
