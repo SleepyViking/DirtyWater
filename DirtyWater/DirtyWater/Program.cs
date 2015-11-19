@@ -45,22 +45,28 @@ namespace DirtyWater
             Socket socket = (Socket)AR.AsyncState;
             int received = socket.EndReceive(AR);
             byte[] dataBuf = new byte[received];
+
             Console.WriteLine("Processing data...");
+
             Array.Copy(_buffer, dataBuf, received);
 
-            string text = Encoding.ASCII.GetString(dataBuf);
-            Console.WriteLine("Text received: " + text);
+            //string text = Encoding.ASCII.GetString(dataBuf);
+            //Console.WriteLine("Text received: " + text);
 
             //string response = string.Empty;
 
-            byte[] data;
+            switch (dataBuf[0]){
 
-            if (text[0] == '@')
-            {
-                data = Encoding.ASCII.GetBytes(ParseInput(text));
-            }
-            else {
-                data = Encoding.ASCII.GetBytes(text);
+                case (byte)'@':
+                    Meta.ParseIn(dataBuf);
+                    break;
+                case (byte)'!':
+                    World.ParseIn(dataBuf);
+                    break;
+                default:
+                    Console.WriteLine(dataBuf.ToString());
+                    break;
+
             }
 
             socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
@@ -71,52 +77,6 @@ namespace DirtyWater
         {
             Socket socket = (Socket)AR.AsyncState;
             socket.EndSend(AR);
-        }
-
-
-        private static String ParseInput(String s) {
-            String report = "";
-            String name = "";
-            String pass = "";
-
-            int i = 1;
-            switch(s[i++]){
-                case 'L':
-                    report += "Login initiated, ";
-                    break;
-                case 'N':
-                    report += "New account created, ";
-                    break;
-                case 'U':
-                    report += "Account Unregistered, ";
-                    break;
-                default:
-                    report += "Undefined";
-                    break;                    
-            }
-
-            if (s[i] == '/') {
-                while(s[++i] != '/')
-                {
-                    name += s[i];
-                }
-                while (s[++i] != '?') // ADD A THING FOR SAFETY
-                {
-                    pass += s[i];
-                }
-            }
-
-            report += "\nN: " + name + "\nP: " + pass;
-            Console.WriteLine(report);
-
-            if (pass == "Hella")
-            {
-                return "Affirmative";
-            }
-            else {
-                return "Negative";
-            }
-
         }
 
 

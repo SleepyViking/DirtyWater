@@ -1,0 +1,139 @@
+DLGP MUD Client protocol
+
+Abstract:
+
+	The model we will follow is one with a central Server, and many Clients. Duh.
+	
+	Clients submit Requests to the Server for particular things, such as to log into a user 
+	account, or to please move the entity Player some number of units in the X and Y directions, 
+	or to use an attack etc. etc.
+
+	The Server processes these requests, and decides how to act on them (based, for instance, on
+	the permission level of the user that has sent the request). Meanwhile, it is also constantly
+	sending updates to the positions of entities in the world, which the client in turn interprets
+	to render for the player. All of this must happen fast enough for the player to meaningfully
+	react to the world around him.
+
+	
+	
+	Using a limited buffer size, the question of how to efficiently encode and decode data between
+	a server and client arises. THIS PROTOCOL WILL FOCUS ON THE FORMAT OF REQUESTS THE CLIENT MAY 
+	SEND, AND THE SERVER'S RESPONSES TOO THOSE REQUESTS. In thinking on this issue I would suggest 
+	that there are at least two distinct Domains on the Server, through which the Client and Server 
+	should interact.
+	
+	The first is Administrative, characterized by encrypted communication which is NOT necessarily 
+	time-sensitive, dealing mostly with accounts, verification of identity, etc. and possibly private 
+	messaging.
+
+	The second is the World domain, which should in contrast be characterized by time-sensitive
+	commands such as entity movement, updating of the world map to players, and anything else
+	which in the world may require frequent updates.
+	
+	There are various possible subdomains which fit neatly into neither, but may include group/world
+	chats and other nonvital communications. Domains in general should be separate modules/packages?
+	of code to organize the structure of the Server.
+	-
+	
+	-
+Request format:	
+
+	Requests sent by the Client will be formatted as below:
+	
+	'Domain''Command'('subdelimiter'){...DATA...}('SubDelimiter'{...DATA...})'Delimiter'
+	'Domain' is a single ASCII character/byte used to direct the control flow in the Server to one of the 
+			above domains. Domains for now are: 
+			@ - Administrative 
+			! - World
+	'Command' is a single ASCII character/byte used to direct the control flow in the Server within a
+			domain and, depending, may be a pair of characters.
+	{DATA}	is a series of bytes derived from data, or parameters that the client sends along with commands.
+			its size may vary depending on the type of data being sent.
+	'Subdelimiter' is a single byte used by the Command to delimit (especially within data fields of varying length)
+			sections of data
+			Subdelimiters include:
+			/ - used in both domains between variable-sized parameters
+			
+	'Delimiter' is one of three characters:
+			'+' - indicates to the Server that there is another request WITHIN THE SAME DOMAIN
+			';' - indicates to the Server that there is another request in the packet which may be in another domain
+			'?' - indicates that the list of requests is done
+ 
+Sample:
+	A sample packet, with added linebreaks, for a new user request followed by a login to the same account
+	may be formatted like this:
+	
+	@N/{Username}/{Password}+
+	@L/{Username}/{Password}?
+		'@' - Administrative domain
+		'N' - New account command
+		'/' - Begin new data field
+		{Username} - literal byte[] to be interpreted as a username
+		'/' - Begin new data field
+		{Password} - literal byte[] to be interpreted as a Password
+		'+' - persists that there is another request within this domain to check out
+		'L' - Login command
+		
+		
+BUFFER SIZE: 1024B
+
+DOMAINS:
+	ADMINISTRATIVE:
+	
+		Client requests that inerface with the user database. Start with '@'
+		
+		REGISTRATION: all of these commands must be encrypted as they contain sensitive information like passwords
+		@L/username/password?	 - login,
+		@N/username/password?	 - add new user, allocating a new account space
+		@U/username/password?	 - remove existing user, freeing the account.
+		@K/username(/time)?		 - kick user (for optional time).
+		@B/username?			 - BAN USER from ever reconnecting. Do not free their account.
+		
+	WORLD:
+		
+		Server requests that interface with the actual gameplay and the world in the MUD. Start with '!'.
+		Note that most of these are, instead of strings, numerical values of fixed width. Entities exist
+		in the World domain, and are not directly dependent on the Client's control
+		
+		Note, '_' Underscore indicates a 0x00 byte.
+		
+		MOVEMENT:
+		
+		!M _ 0xXXXXXXXX 0xYYYYYYYY ? - 12Bytes Move an entity with 32bit ID# E by a signed 32bit offset X and 32bit offset Y.
+		!M J 0xXXXXXXXX 0xYYYYYYYY ? - 12Bytes Attempt to physically jump to the specified coord vs. jump skill
+		!M C 0xXXXXXXXX 0xYYYYYYYY ? - 12Bytes Attempts to crouch
+		
+		!S _ 0xXXXXXXXX 0xYYYYYYYY ? - 12Bytes Try to set the pos of player to X, Y.
+		
+		ATTACKS:	
+			Attacks are all broken down with at least two parameters, these being a Weapon and an Attack.
+			Since Attacks and Weapons can both be procedurally generated, we will allow any conceivable
+			slot simply to allow each iteration to exist, unique in every way.
+			Weapons MAY BE DATA LITERALS INSTEAD OF IDENTIFIERS THIS IS CRAZY AND WE'LL FIGURE IT OUT WHEN WE GET THERE.
+		
+		!A M 0xAAAAAAAA 0xEEEEEEEE - Facilitate an attack identified by the ID A, from the client's controlled entity, in a particular direction. Melee attacks use this.
+		!A A 0xAAAAAAAA 0xXXXXXXXX 0xYYYYYYYY - Facilitate an area attack of ID A, originating at the relative coordinate (X, Y)
+		!A P 0xAAAAAAAA 0xDDDDDDDD 0xVVVVVVVV - Facilitate a projectile attack of ID A, originating from the player, in direction D (converted float?), with velocity V
+		!A B 0xAAAAAAAA 0xDDDDDDDD 0xLLLLLLLL - Facilitate a beam/ray attack of ID A, in direction D, For distance L (L is the intended target, note that the code for the beam will dictate the actual distance of the attack)
+		!A D 0xAAAAAAAA 0xEEEEEEEE - Facilitate an attack identified by the ID A, directly from the client's controlled entity to some other targeted entity. 
+		!A C 0xAAAAAAAA 0xDDDDDDDD 0xLLLLLLLL - Fire a cone of att A in direction D with length L and width W.  
+		
+		
+		MAPPING:
+			Ask for terrain chunks and visibility mask for the player   
+		
+		!G _ 0xNN 0xFF	 - Get the neighborhood of chunks with the client's 0xNN (Neighborhood Size, the radius of the circle which loads around a given player), and 0xFF - whatever flags are necessary
+		!G C 0xNN 0xFF	 - Get the specified chunk considering Neighborhood size and Flags
+		!G V 0xNN 0xFF	 - Get a mask of all visible tiles in each chunk around the player
+		!G 
+		
+		INSPECT:
+			Check the contents of Tiles and the information of Entities present in them
+		!I T 0xXXXXXXXX 0xYYYYYYYY 		 - list of a tile X, Y relative to the player
+		!I E 0xXXXXXXXX 0xYYYYYYYY 0xII	 - list the attributes of entity 0xID on tile X, Y  
+		
+		TALK:
+		
+		!T _ {TEXT} {+/?}	 			 - Say the text string TEXT in the area chat 
+		!T E 0xXXXXXXXX 0xYYYYYYY 0xII	 - Try to talk to entity at index 0xII on tile X, Y
+		

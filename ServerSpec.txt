@@ -1,0 +1,33 @@
+DLGP MUD Server protocol
+
+Abstract:
+
+	The model we will follow is one with a central Server, and many Clients. Duh.
+	
+	Clients submit Requests to the Server for particular things, such as to log into a user 
+	account, or to please move the entity Player some number of units in the X and Y directions, 
+	or to use an attack etc. etc.
+
+	The Server processes these requests, and decides how to act on them (based, for instance, on
+	the permission level of the user that has sent the request). Meanwhile, it is also constantly
+	sending updates to the positions of entities in the world, which the client in turn interprets
+	to render for the player. All of this must happen fast enough for the player to meaningfully
+	react to the world around him.
+
+	
+	
+	Using a limited buffer size, the question of how to efficiently encode and decode data between
+	a server and client arises. THIS PROTOCOL WILL FOCUS ON THE FORMAT OF REPLIES OR UPDATES THAT 
+	THE SERVER WILL SEND TO THE CLIENT.
+	
+	
+Reply types:
+	# - indicates that the sent packet is map data
+	
+	Replies:
+	
+		T - a tile
+		
+	
+	
+	
