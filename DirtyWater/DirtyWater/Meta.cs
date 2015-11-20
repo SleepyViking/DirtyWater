@@ -8,6 +8,7 @@ namespace DirtyWater
 {
     class Meta
     {
+        //Sql sql = new Sql();
 
         enum Req : int{
 
@@ -23,10 +24,15 @@ namespace DirtyWater
 
         public static void ParseIn(byte[] input){
             int request = ((int)input[1] << 8) | input[2];
-            byte[] data;
-            Array.Copy(input, 3, data, 0,  )
+            string[] data = new string[4]; // for now, parses the entire login
+                                           // packet as 4 32-character strings
+
+            for (int i = 0; i < data.Length; i++) {
+                data[i] = input.ToString().Substring((i*32) + 3); 
+            }
+
+            
             //TODO: parse the bytes as char[] 
-            //XOR decode the data with a key
             //Parse the strings out of it ????
 
             switch (request) {
@@ -44,7 +50,7 @@ namespace DirtyWater
         }
 
 
-        public static void Login(string username, string password) {
+        public static void Login(string username, string passhash) {
 
             //TODO:
 
@@ -52,10 +58,7 @@ namespace DirtyWater
             //forward/bind socket to an Object?
             //Note the timestamp and IP of the login in the database
             //Send all of the necessary information back to the client:
-
-
-
-
+        
         }
 
 

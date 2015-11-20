@@ -13,7 +13,6 @@ Abstract:
 	sending updates to the positions of entities in the world, which the client in turn interprets
 	to render for the player. All of this must happen fast enough for the player to meaningfully
 	react to the world around him.
-
 	
 	
 	Using a limited buffer size, the question of how to efficiently encode and decode data between
@@ -25,9 +24,22 @@ Reply types:
 	# - indicates that the sent packet is map data
 	
 	Replies:
-	
-		T - a tile
+
+		#G _ 0xCC {chunk data} {vismask} [+/?]  - GET_CHUNK:(T)errain layer data of chunk 0xCC (relative 
+												to the player). Chunk data is a series of 64 Bytes.
+												vismask is (8 bytes) 64 bits mapped to the visibility of
+												each tile.
+		#G 
 		
-	
-	
-	
+	    #G 
+		# 
+		
+		
+		
+		#I T {???DATA???} [+/;]	 - Mapping results of an Inspection on a Tile. Data contains an 
+								indexed list of Entities on a tile. + is a delimiter indicating 
+								to wait for another packet, and ; is a delimiter indicating no
+								more packets are to be sent. {DATA} is not yet clearly defined.
+		
+		#I E {???DATA???} [+/;]	 - The resuts of an Inspection of an Item on a particular Tile.
+		

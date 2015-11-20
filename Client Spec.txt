@@ -54,40 +54,38 @@ Request format:
 			Subdelimiters include:
 			/ - used in both domains between variable-sized parameters
 			
-	'Delimiter' is one of three characters:
-			'+' - indicates to the Server that there is another request WITHIN THE SAME DOMAIN
-			';' - indicates to the Server that there is another request in the packet which may be in another domain
-			'?' - indicates that the list of requests is done
+	'Delimiter' is one of the below characters:
+			'?' - indicates the end of the request
  
 Sample:
-	A sample packet, with added linebreaks, for a new user request followed by a login to the same account
-	may be formatted like this:
+	A sample packet for a login to a given account may be formatted like this:
 	
-	@N/{Username}/{Password}+
-	@L/{Username}/{Password}?
-		'@' - Administrative domain
-		'N' - New account command
-		'/' - Begin new data field
-		{Username} - literal byte[] to be interpreted as a username
-		'/' - Begin new data field
-		{Password} - literal byte[] to be interpreted as a Password
-		'+' - persists that there is another request within this domain to check out
-		'L' - Login command
+	@L _ {Username....} {....PassHash....} ?
+	
+		'@' - Administrative domain - 1 Byte
+		'L' - Login command 	- 1 Byte
+		'\0'- Empty padding character - 1 Byte
+		{Username} - literal byte[12] to be interpreted as a username		- 12 Bytes
+		{PassHash} - literal byte[16] to be interpreted as a Password Hash  - 16 Bytes
+		'?' - Ends the Request - 1 Byte
 		
-		
-BUFFER SIZE: 1024B
+			Total: 32 Byte / 128 Byte Buffer
+
+BUFFER SIZE: 128B
 
 DOMAINS:
 	ADMINISTRATIVE:
 	
-		Client requests that inerface with the user database. Start with '@'
+		Client requests that interface with the user database. Start with '@'
 		
-		REGISTRATION: all of these commands must be encrypted as they contain sensitive information like passwords
-		@L/username/password?	 - login,
-		@N/username/password?	 - add new user, allocating a new account space
-		@U/username/password?	 - remove existing user, freeing the account.
-		@K/username(/time)?		 - kick user (for optional time).
-		@B/username?			 - BAN USER from ever reconnecting. Do not free their account.
+		REGISTRATION: all of these commands must be encrypted(?) as they contain sensitive information like passwords
+		@L _ username password?	 - login
+		@L O username password?	 - logout
+		
+		@R _ username password?	 - Register new user, allocating a new account space
+		@U _ username password?	 - remove existing user, freeing the account.
+		@K _ username (/time)?		 - kick user (for optional time).
+		@B _ username?			 - BAN USER from ever reconnecting. Do not free their account.
 		
 	WORLD:
 		
@@ -116,24 +114,26 @@ DOMAINS:
 		!A P 0xAAAAAAAA 0xDDDDDDDD 0xVVVVVVVV - Facilitate a projectile attack of ID A, originating from the player, in direction D (converted float?), with velocity V
 		!A B 0xAAAAAAAA 0xDDDDDDDD 0xLLLLLLLL - Facilitate a beam/ray attack of ID A, in direction D, For distance L (L is the intended target, note that the code for the beam will dictate the actual distance of the attack)
 		!A D 0xAAAAAAAA 0xEEEEEEEE - Facilitate an attack identified by the ID A, directly from the client's controlled entity to some other targeted entity. 
-		!A C 0xAAAAAAAA 0xDDDDDDDD 0xLLLLLLLL - Fire a cone of att A in direction D with length L and width W.  
+		!A C 0xAAAAAAAA 0xDDDDDDDD 0xLLLLLLLL 0xWWWWWWWW - Fire a cone of att A in direction D with length L and width W.  
 		
 		
 		MAPPING:
-			Ask for terrain chunks and visibility mask for the player   
+			Ask for terrain chunks and visibility mask for the player. G is a mass get of
+			the concerned data
 		
 		!G _ 0xNN 0xFF	 - Get the neighborhood of chunks with the client's 0xNN (Neighborhood Size, the radius of the circle which loads around a given player), and 0xFF - whatever flags are necessary
-		!G C 0xNN 0xFF	 - Get the specified chunk considering Neighborhood size and Flags
+		!G C 0xNN 0xFF	 - Get the specified chunk (considers the Neighborhood size and Flags?)
 		!G V 0xNN 0xFF	 - Get a mask of all visible tiles in each chunk around the player
 		!G 
 		
 		INSPECT:
 			Check the contents of Tiles and the information of Entities present in them
-		!I T 0xXXXXXXXX 0xYYYYYYYY 		 - list of a tile X, Y relative to the player
-		!I E 0xXXXXXXXX 0xYYYYYYYY 0xII	 - list the attributes of entity 0xID on tile X, Y  
-		
+		!I T 0xXXXXXXXX 0xYYYYYYYY 		 - list contents of a tile X, Y relative to the player
+		!I E 0xXXXXXXXX 0xYYYYYYYY 0xII	 - list the attributes of entity 0xII on tile X, Y  
+			
+			
 		TALK:
 		
 		!T _ {TEXT} {+/?}	 			 - Say the text string TEXT in the area chat 
-		!T E 0xXXXXXXXX 0xYYYYYYY 0xII	 - Try to talk to entity at index 0xII on tile X, Y
+		!T E 0xXXXXXXXX 0xYYYYYYYY 0xII	 - Try to talk to entity at index 0xII on tile X, Y
 		
