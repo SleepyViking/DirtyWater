@@ -19,11 +19,11 @@ namespace AdminSQL
         {
             server = "107.191.103.148";
             database = "meta";
-            uid = "root";
-            password = "ScruffyLookingNerfHerder23";
+            uid = "Bryce";
+            password = "run3blade101";
             string connectionString;
-            connectionString = "SERVER=" + server + ";" + "DATABASE=" +
-            database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+            connectionString = "server=" + server + ";" + "user=" + uid + ";" + "database=" +
+            database + ";" + "port=3306;" + "password=" + password + ";";
 
             connection = new MySqlConnection(connectionString);
         }
@@ -31,7 +31,9 @@ namespace AdminSQL
         {
             try
             {
+                //Console.WriteLine("Fuck");
                 connection.Open();
+                //Console.WriteLine("Off");
                 return true;
             }
             catch (MySqlException e)
@@ -47,10 +49,14 @@ namespace AdminSQL
                         //Wrong Username or Password
                         Console.WriteLine("Wrong Username or Password");
                         break;
+                    default:
+                        Console.WriteLine(e + "\t" + e.Number);
+                        break;
                 }
                 return false;
             }
         }
+
         private bool CloseConnection()
         {
             try
@@ -64,72 +70,83 @@ namespace AdminSQL
                 return false;
             }
         }
+        public bool ReadDB()
+        {
+            string query = "SELECT * FROM login";
+            List<string>[] LoginInfo = new List<string>[2];
+            LoginInfo[0] = new List<string>();
+            LoginInfo[1] = new List<string>();
+            if (this.OpenConnection() == true)
+            {
+                //Console.WriteLine("Connection Opened");
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    //Console.WriteLine("Data Reader Reading...");
+                    LoginInfo[0].Add(dataReader["username"] + "");
+                    LoginInfo[1].Add(dataReader["password"] + "");
+                }
+                for (int i = 0; i < LoginInfo[0].Count; i++)
+                {
+                    Console.WriteLine("Username = " + LoginInfo[0][i] + "; Password = " + LoginInfo[1][i] + ";");
+                }
+                dataReader.Close();
+                this.CloseConnection();
+                return true;
+            }
+            return false;
+        }
+
 
         public bool AttemptLogin(string username, string password)
         {
-            string query = "SELECT password FROM login WHERE (username = '" + username + "')";
+            string query = "SELECT * FROM login WHERE (username = '" + username + "')";
+            List<string>[] LoginInfo = new List<string>[1];
+            LoginInfo[0] = new List<string>();
+            LoginInfo[0].Add("");
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
-                if (password == dataReader["password"] + "")
-                    {
-                    dataReader.Close();
-                    this.CloseConnection();
-                    return true; }
+                while (dataReader.Read())
+                {
+                    LoginInfo[0][0] = dataReader["password"] + "";
+                }
+
                 dataReader.Close();
                 this.CloseConnection();
-            }
+                if (password == LoginInfo[0][0] & LoginInfo[0][0] != "")
+                {
+                    return true;
+                }
+                else if (LoginInfo[0][0] == "")
+                {
+                    Console.WriteLine("User not found");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Username or Password");
+                }
+                }
                 return false;
+            }
+
+        public bool CreateUser(string username, string password)
+        {
+            string query = "INSERT INTO login (username, password) VALUES ('" + username + "','" + password + "')";
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.CommandText = query;
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+                this.CloseConnection();
+                return true;
+            }
+            return false;   
+            }
         }
-
-        //public List<string>[] SelectHighScores()
-        //{
-        //    string query = "SELECT * FROM scores ORDER BY score DESC LIMIT 5";
-        //    //string mime490score = "";
-        //    List<string>[] ScoreList = new List<string>[3];
-        //    ScoreList[0] = new List<string>();
-        //    ScoreList[1] = new List<string>();
-        //    ScoreList[2] = new List<string>();
-
-        //    if (this.OpenConnection() == true)
-        //    {
-        //        MySqlCommand cmd = new MySqlCommand(query, connection);
-        //        MySqlDataReader dataReader = cmd.ExecuteReader();
-
-        //        //mime490score = dataReader.GetString(1).ToString();
-
-        //        while (dataReader.Read())
-        //        {
-        //            ScoreList[0].Add(dataReader["id"] + "");
-        //            ScoreList[1].Add(dataReader["username"] + "");
-        //            ScoreList[2].Add(dataReader["score"] + "");
-        //        }
-
-        //        dataReader.Close();
-
-        //        this.CloseConnection();
-
-        //        return ScoreList;
-        //    }
-        //    return ScoreList;
-        //}
-        //public void WriteNewScore(string newusername, int newscore)
-        //{
-        //    string query = "INSERT INTO scores (username, score) VALUES ('" + newusername + "','" + newscore + "')";
-
-        //    if (this.OpenConnection() == true)
-        //    {
-        //        MySqlCommand cmd = new MySqlCommand();
-        //        cmd.CommandText = query;
-        //        cmd.Connection = connection;
-
-        //        cmd.ExecuteNonQuery();
-
-        //        this.CloseConnection();
-
-        //    }
-        //}
     }
-}
