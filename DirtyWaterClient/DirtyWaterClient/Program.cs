@@ -44,8 +44,8 @@ namespace DirtyWaterClient
         {
             int attempts = 0;
 
-            //IPAddress[] IPs = Dns.GetHostAddresses("107.191.103.148");
-            IPAddress[] IPs = Dns.GetHostAddresses("127.0.0.1");
+            IPAddress[] IPs = Dns.GetHostAddresses("107.191.103.148");
+            //IPAddress[] IPs = Dns.GetHostAddresses("127.0.0.1");
 
             while (!_clientSocket.Connected)
             {
