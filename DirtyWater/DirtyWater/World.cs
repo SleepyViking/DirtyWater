@@ -45,10 +45,7 @@ namespace DirtyWater
 
         }
 
-
-
-
-
+        
 
         public static void ParseIn(byte[] input) {
 
