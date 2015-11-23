@@ -32,7 +32,7 @@ namespace DirtyWaterClient
                 _clientSocket.Send(buffer);
                 Console.WriteLine("Request Sent");
 
-                byte[] receivedBuf = new byte[128];
+                byte[] receivedBuf = new byte[1024];
                 int rec = _clientSocket.Receive(receivedBuf);
                 byte[] data = new byte[rec];
                 Array.Copy(receivedBuf, data, rec);
@@ -45,7 +45,6 @@ namespace DirtyWaterClient
             int attempts = 0;
 
             IPAddress[] IPs = Dns.GetHostAddresses("107.191.103.148");
-            //IPAddress[] IPs = Dns.GetHostAddresses("127.0.0.1");
 
             while (!_clientSocket.Connected)
             {
