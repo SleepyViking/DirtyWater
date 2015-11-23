@@ -56,20 +56,8 @@ namespace DirtyWater
             Array.Copy(_buffer, dataBuf, received);
 
             string text = Encoding.ASCII.GetString(dataBuf);
+
             Console.WriteLine("Text received: " + text);
-
-            //string response = string.Empty;
-
-            //string lin = "@L\0Nikolito\0\0\0\0\0\0\0\0" +
-            //             "Passhash\0\0\0\0\0\0\0\0?";
-
-
-            //byte[] lin2 = new byte[lin.Length];
-            
-            //for (int i = 0; i < lin.Length; i++) {
-            //    lin2[i] = BitConverter.GetBytes(lin[i])[0]; //Whoops breaks uniquode smd
-            //}
-
             
             switch (dataBuf[0]){
                 case (byte)'@':

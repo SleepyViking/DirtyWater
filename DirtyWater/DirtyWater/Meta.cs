@@ -68,13 +68,13 @@ namespace DirtyWater
                                                // packet as 7 16-character strings
                                                // 0 - username
                                                // 1 - password hash
-                                               // 2-5 - email address
+                                               // 2-6 - email address, other data fields
                                                //
 
-                for (int i = 0; i < (input.Length/16); i++)
+                for (int i = 0; i < (input.Length/16)-1; i++)
                 {
-                    Console.WriteLine();
-                    data[i] = Encoding.UTF8.GetString(input, (i*16)+3, 16);
+                    Console.WriteLine(i);
+                    data[i] = Encoding.ASCII.GetString(input, (i*16)+3, 16).Trim('\0');
                     Console.WriteLine(data[i]);
                 }
 
@@ -90,7 +90,7 @@ namespace DirtyWater
                         break;
 
                     case (int)Req.REGISTER:
-                        Register(data[0], data[1], data[2] + data[3] + data[4]); //username, password, email
+                        Register(data[0], data[1], data[2] + data[3] + data[4] + data[5]); //username, password, email
                         break;
 
                     default: break;
@@ -98,14 +98,13 @@ namespace DirtyWater
 
                 try
                 {
-                    Console.WriteLine("Mahkiini tsunaga...");
                     conn.Close();
-                    Console.WriteLine("Tsunaga mahjen kiini dan.");
                 }
                 catch (MySqlException e)
                 {
                     Console.WriteLine(e + "\n" + e.Number);
                 }
+
             }
 
         }
@@ -114,11 +113,18 @@ namespace DirtyWater
         public static void Login(string username, string passhash) {
             if (Validate(username, passhash))
             {
-                time = string.Format("{0:HH:mm:ss tt}", DateTime.Now);
-                Console.WriteLine("UH???");
+                time = string.Format("{0:yyyy.MM.dd 0:HH:mm:ss tt}", DateTime.Now);
 
+                rdr = new MySqlCommand("SELECT lastin FROM login WHERE username='" + username + "';", conn).ExecuteReader();
+                while (rdr.Read()) {
+                    Console.WriteLine("User's last sign in was: " + rdr["lastin"]);
+                }
+                rdr.Close();
+
+                new MySqlCommand("UPDATE login SET lastin='" + time + "' WHERE username='" + username + "';", conn).ExecuteNonQuery();
+                
             }
-            Console.WriteLine("HHHHhhhhh");
+            Console.WriteLine("HHHHhhhh");
          
 
 
@@ -171,23 +177,21 @@ namespace DirtyWater
             cmd = new MySqlCommand(query, conn);
             rdr = cmd.ExecuteReader();
 
-            List<string>[] LoginInfo = new List<string>[1];
-            LoginInfo[0] = new List<string>();
-            LoginInfo[0].Add("");
+            string loginInfo = "";
 
             while (rdr.Read())
             {
                 Console.WriteLine("FUCK");
-                LoginInfo[0][0] = rdr["password"] + "";
+                loginInfo = rdr["password"]+"";
             }
 
             rdr.Close();
 
-            if (passhash == LoginInfo[0][0] & LoginInfo[0][0] != "")
+            if (passhash == loginInfo && loginInfo != "")
             {
                 return true;
             }
-            else if (LoginInfo[0][0] == "")
+            else if (loginInfo == "")
             {
                 Console.WriteLine("User not found");
             }
@@ -195,7 +199,6 @@ namespace DirtyWater
             {
                 Console.WriteLine("Invalid Username or Password");
             }
-            
             return false;
 
         }

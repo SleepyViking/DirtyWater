@@ -11,3 +11,10 @@ I:\Programming\CS\DirtyWater\DirtyWater\DirtyWater\bin\Debug\DirtyWater.exe
 I:\Programming\CS\DirtyWater\DirtyWater\DirtyWater\bin\Debug\DirtyWater.pdb
 I:\Programming\CS\DirtyWater\DirtyWater\DirtyWater\obj\Debug\DirtyWater.csprojResolveAssemblyReference.cache
 I:\Programming\CS\DirtyWater\DirtyWater\DirtyWater\bin\Debug\MySql.Data.dll
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\bin\Debug\DirtyWater.exe.config
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\obj\Debug\DirtyWater.exe
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\obj\Debug\DirtyWater.pdb
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\bin\Debug\DirtyWater.exe
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\bin\Debug\DirtyWater.pdb
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\bin\Debug\MySql.Data.dll
+C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWater\DirtyWater\obj\Debug\DirtyWater.csprojResolveAssemblyReference.cache

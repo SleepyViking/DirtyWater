@@ -30,7 +30,7 @@ namespace DirtyWaterClient
 
             while (!valid)
             {
-                Console.WriteLine("{0}> ", user);
+                Console.Write("{0}> ", user);
                 input = Console.ReadLine();
                 SecureString pass;
 
