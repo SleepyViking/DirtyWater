@@ -9,38 +9,28 @@ namespace DirtyWaterClient
 {
     class MetaMenu
     {
-
-        string user;
+        private string user = "";
 
         public MetaMenu(){
 
-            user = "";
 
         }
 
-        private void Start() {
-            bool running = true;
-            while (running)
-            {
-                Console.WriteLine(
-                    "Welcome to the DirtyWater sub-prealpha menu.\n" +
-                    "Please type one of the commands below to begin.\n" +
-                    " * register\n" +
-                    " * login"
-                );
-
-                Prompt(user);
-            }
-        }
-
-        private void Prompt(string user)
+        public byte[] Prompt()
         {
+            Console.WriteLine(
+                "Welcome to the DirtyWater sub-prealpha client main menu.\n" +
+                "Please type one of the commands below to begin.\n" +
+                " * register\n" +
+                " * login\n"
+            );
+
             bool valid = false;
             string input;
 
             while (!valid)
             {
-                Console.WriteLine("{0}> ", user);
+                Console.Write("{0}> ", user);
                 input = Console.ReadLine();
                 SecureString pass;
 
@@ -49,12 +39,11 @@ namespace DirtyWaterClient
 
                     
                     case "login":
-                        Console.WriteLine("Username: ");
+                        Console.Write("Username: ");
                         user = Console.ReadLine();
-                        Console.WriteLine("Password: ");
+                        Console.Write("Password: ");
                         pass = GetPassword();
-                        ClientMeta.Login(user, pass);
-                        break;
+                        return ClientMeta.Login(user, pass);
 
                     case "register":
                         string email = "";
@@ -68,14 +57,16 @@ namespace DirtyWaterClient
                             Console.WriteLine("Repeat Password: ");
                             if (GetPassword() == pass) break;
                         }
-                        ClientMeta.Register(user, pass, email);
-                        break;
+                        return ClientMeta.Register(user, pass, email);
 
                     default:
                         Console.WriteLine("Sorry, that command is not recognized.");
                         break;
                 }
+
+                return new byte[128];
             }
+            return new byte[128];
 
         }
 

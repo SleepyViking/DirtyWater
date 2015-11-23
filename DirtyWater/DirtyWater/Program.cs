@@ -5,20 +5,25 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace DirtyWater
 {
     class Program
     {
-        private static byte[] _buffer = new byte[1024];
+        private static byte[] _buffer = new byte[128];
         private static List<Socket> _clientSockets = new List<Socket>();
         private static Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+        MySqlConnection conn = new MySqlConnection();
 
         static void Main(string[] args)
         {
             Console.Title = "Server";
             SetupServer();
             Console.ReadLine();
+
+            
         }
 
         private static void SetupServer()
@@ -50,13 +55,11 @@ namespace DirtyWater
 
             Array.Copy(_buffer, dataBuf, received);
 
-            //string text = Encoding.ASCII.GetString(dataBuf);
-            //Console.WriteLine("Text received: " + text);
+            string text = Encoding.ASCII.GetString(dataBuf);
 
-            //string response = string.Empty;
-
+            Console.WriteLine("Text received: " + text);
+            
             switch (dataBuf[0]){
-
                 case (byte)'@':
                     Meta.ParseIn(dataBuf);
                     break;
@@ -70,8 +73,8 @@ namespace DirtyWater
             }
 
             // Blocking reply?
-            //socket.BeginSend(data, 0, data.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
-            //socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
+            socket.BeginSend(dataBuf, 0, dataBuf.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
         }
 
         private static void SendCallback(IAsyncResult AR)
