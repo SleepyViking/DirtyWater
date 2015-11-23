@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,55 +12,64 @@ namespace DirtyWaterClient
 
         public static string request = "";
 
+        public static void Login(string username, SecureString password) {
+            if (Validate(username, password) == 0)
+            {
+                request = "@L\x00" + username.PadRight(16, '\0') + PassHash(password).PadRight(16, '\0');  
 
-        public static byte[] Login(string username, SecureString password) {
-            request = "@L\x00" + username.PadRight(16, '\0') + ToUnsecureString(password).PadRight(16, '\0');  
-            return Serialize(request);
+            }
         }
 
+        public static void Logout(string username) {
+            if (Validate(username) == 0)
+            {
+                request = "@LO";
+            }
+            
 
-        public static byte[] Logout(string username) {
-
-            request = "@LO";
-            return Serialize(request);
         }
 
-
-        public static byte[] Register(string username, SecureString password, string email) {
-
-            request = "@R\x00";
-            return Serialize(request);
+        public static void Register(string username, SecureString password, string email) {
+            if (Validate(username, password) == 0)
+            {
+                request = "@R\x00";
+            }
         }
 
+        public static void Unregister(string username, SecureString password) {
+            if (Validate(username, password) == 0)
+            {
+                request = "@U\x00";
+            }
+        }
 
-        public static byte[] Unregister(string username, SecureString password) {
+        public static byte Validate(string username, SecureString password) {
+            //salt and hash the password HERE before sending it along to the 
+            //string assembly methods
+            return 0;
+        }
 
-            request = "@U\x00";
-            return Serialize(request);
+        public static byte Validate(string username)
+        {
+            //Check to see if Username exists, and if it does, if the password matches.
+            //done before any other processing.
+            //Should check their flags to see if they are banned, temporarily or permanently.
+
+            return 0;
+        }
+
+        public static string PassHash(SecureString s) {
+
+
+            s.Dispose();
+            return "";
         }
 
         public static byte[] Serialize(string input) {
             byte[] bytes = new byte[128];
-            Array.Copy(Encoding.ASCII.GetBytes(input.PadRight(128, '\0')), bytes, 128);
             return bytes;
         }
 
-        public static string ToUnsecureString(SecureString securePassword)
-        {
-            if (securePassword == null)
-                throw new ArgumentNullException("securePassword");
-
-            IntPtr unmanagedString = IntPtr.Zero;
-            try
-            {
-                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-                return Marshal.PtrToStringUni(unmanagedString);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
-            }
-        }
 
     }
 }
