@@ -12,22 +12,19 @@ namespace DirtyWaterClient
     {
         private static Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-
         static void Main(string[] args)
         {
             Console.Title = "Client";
             LoopConnect();
-            SendLoop();
+            SendLoop(new MetaMenu());
             Console.ReadLine();
         }
 
-        private static void SendLoop()
+        private static void SendLoop(MetaMenu m)
         {
             while (true)
             {
-                Console.Write("Enter a request: ");
-                string req = Console.ReadLine();
-                byte[] buffer = Encoding.ASCII.GetBytes(req);
+                byte[] buffer = m.Prompt();
                 Console.WriteLine("Request Sending...");
                 _clientSocket.Send(buffer);
                 Console.WriteLine("Request Sent");
