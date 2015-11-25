@@ -247,17 +247,21 @@ namespace DirtyWater
             byte[] testHashBytes = new byte[HASH_BYTE_SIZE];
             byte[] correctHashBytes = new byte[HASH_BYTE_SIZE];
             byte[] saltBytes = new byte[SALT_BYTE_SIZE];
+            try {
+                while (rdr.Read())
+                {
+                    //Console.WriteLine("Reading...");
+                    correctHashBytes = (byte[])rdr["hash"];
 
-            while (rdr.Read())
-            {
-                //Console.WriteLine("Reading...");
-                correctHashBytes = (byte[])rdr["passhash"];
+                    //Console.WriteLine("Correct Hash: " + Encoding.ASCII.GetString(correctHashBytes));
+                    saltBytes = (byte[])rdr["salt"];
 
-                //Console.WriteLine("Correct Hash: " + Encoding.ASCII.GetString(correctHashBytes));
-                saltBytes = (byte[])rdr["salt"];
+                    //Console.WriteLine("User's Salt: " + Encoding.ASCII.GetString(saltBytes));
 
-                //Console.WriteLine("User's Salt: " + Encoding.ASCII.GetString(saltBytes));
-
+                }
+            }
+            catch (MySqlException e) {
+                Console.WriteLine(e + "\n\n " + e.Number);
             }
 
             testHashBytes = PBKDF2(testhash, saltBytes, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
