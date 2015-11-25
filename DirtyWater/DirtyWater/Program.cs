@@ -19,11 +19,11 @@ namespace DirtyWater
 
         static void Main(string[] args)
         {
+
             Console.Title = "Server";
             SetupServer();
             Console.ReadLine();
 
-            
         }
 
         private static void SetupServer()
@@ -58,23 +58,27 @@ namespace DirtyWater
             string text = Encoding.ASCII.GetString(dataBuf);
 
             Console.WriteLine("Text received: " + text);
-            
-            switch (dataBuf[0]){
+
+            switch (dataBuf[0]) {
                 case (byte)'@':
-                    Meta.ParseIn(dataBuf);
+                    Meta.ParseIn(ref dataBuf);
                     break;
                 case (byte)'!':
                     World.ParseIn(dataBuf);
                     break;
                 default:
-                    Console.WriteLine(dataBuf.ToString());
+                    Console.WriteLine(Encoding.ASCII.GetString(dataBuf));
                     break;
 
             }
 
-            // Blocking reply?
-            socket.BeginSend(dataBuf, 0, dataBuf.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
-            socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
+            if (IsConnected(socket))
+            {
+                socket.BeginSend(dataBuf, 0, dataBuf.Length, SocketFlags.None, new AsyncCallback(SendCallback), socket);
+                socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback), socket);
+            }
+
+            else Console.WriteLine("C L I E N T    D I S C O N N E C T E D.");
         }
 
         private static void SendCallback(IAsyncResult AR)
@@ -83,6 +87,28 @@ namespace DirtyWater
             socket.EndSend(AR);
         }
 
+        public static bool IsConnected(Socket socket)
+        {
+            try
+            {
+                if (!(socket.Poll(1, SelectMode.SelectRead) && socket.Available == 0))
+                {
+                    return true;
+                }
+
+
+            }
+            catch (SocketException) {
+
+                Console.WriteLine("CLIENT DISCONNECTED.");
+
+            }
+
+            _clientSockets.Remove(socket);
+            return false;
+
+        }
 
     }
+
 }

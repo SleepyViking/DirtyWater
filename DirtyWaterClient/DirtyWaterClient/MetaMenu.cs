@@ -13,17 +13,18 @@ namespace DirtyWaterClient
 
         public MetaMenu(){
 
+            Console.WriteLine(
+            "Welcome to the DirtyWater sub-prealpha client main menu.\n" +
+            "Please type one of the commands below to begin.\n" +
+            " * register\n" +
+            " * login\n"
+            );
 
         }
 
         public byte[] Prompt()
         {
-            Console.WriteLine(
-                "Welcome to the DirtyWater sub-prealpha client main menu.\n" +
-                "Please type one of the commands below to begin.\n" +
-                " * register\n" +
-                " * login\n"
-            );
+
 
             bool valid = false;
             string input;
@@ -33,6 +34,7 @@ namespace DirtyWaterClient
                 Console.Write("{0}> ", user);
                 input = Console.ReadLine();
                 SecureString pass;
+                //string pass = "";
 
                 switch (input)
                 {
@@ -47,16 +49,15 @@ namespace DirtyWaterClient
 
                     case "register":
                         string email = "";
-                        while (true) {
-                            Console.WriteLine("Please enter your Email address: ");
+                        do {
+                            Console.Write("Please enter your Email address: ");
                             email = Console.ReadLine();
-                            Console.WriteLine("Create a username: ");
+                            Console.Write("Create a username: ");
                             user = Console.ReadLine();
-                            Console.WriteLine("Create a password: ");
+                            Console.Write("Create a password: ");
                             pass = GetPassword();
-                            Console.WriteLine("Repeat Password: ");
-                            if (GetPassword() == pass) break;
-                        }
+                            Console.Write("Repeat Password: ");
+                        } while (ClientMeta.ToUnsecureString(GetPassword()) != ClientMeta.ToUnsecureString(pass));
                         return ClientMeta.Register(user, pass, email);
 
                     default:
@@ -90,6 +91,7 @@ namespace DirtyWaterClient
                 }
 
             }
+            Console.Write("\n");
             return password;
         }
 

@@ -22,8 +22,12 @@ namespace DirtyWaterClient
 
         private static void SendLoop(MetaMenu m)
         {
+            //bool sending;
+
             while (true)
             {
+
+
                 byte[] buffer = m.Prompt();
                 Console.WriteLine("Request Sending...");
                 _clientSocket.Send(buffer);
@@ -33,7 +37,22 @@ namespace DirtyWaterClient
                 int rec = _clientSocket.Receive(receivedBuf);
                 byte[] data = new byte[rec];
                 Array.Copy(receivedBuf, data, rec);
+
+                switch (data[0]) {
+                    case (byte)'$':             // >> Notifications
+                        ClientMeta.ParseIn(ref data);
+                        break; 
+                    case (byte)'#': break;      // >> Map data
+                    case (byte)'%': break;      // >> Entity/player stats
+                    default:
+                        Console.WriteLine("Odd packet received: " + Encoding.ASCII.GetString(data));
+                        break;
+                    
+                }
+
                 Console.WriteLine("Received: " + Encoding.ASCII.GetString(data));
+                
+
             }
         }
 
