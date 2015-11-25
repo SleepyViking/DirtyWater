@@ -19,6 +19,12 @@ namespace DirtyWaterClient
             return Serialize(request);
         }
 
+        public static byte[] Login(string username, string password)
+        {
+            request = "@L\x00" + username.PadRight(16, '\0') + password.PadRight(16, '\0');
+            return Serialize(request);
+        }
+
 
         public static byte[] Logout(string username) {
 

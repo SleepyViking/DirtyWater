@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.LoginPane = new System.Windows.Forms.Panel();
-            this.PasswordBox = new System.Windows.Forms.TextBox();
-            this.UsernameBox = new System.Windows.Forms.TextBox();
-            this.Ltxt1 = new System.Windows.Forms.TextBox();
-            this.Ltxt2 = new System.Windows.Forms.TextBox();
-            this.LoginButton = new System.Windows.Forms.TextBox();
-            this.RegisterPageButton = new System.Windows.Forms.TextBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.RegisterPageButton = new System.Windows.Forms.TextBox();
+            this.LoginButton = new System.Windows.Forms.TextBox();
+            this.Ltxt2 = new System.Windows.Forms.TextBox();
+            this.Ltxt1 = new System.Windows.Forms.TextBox();
+            this.UsernameBox = new System.Windows.Forms.TextBox();
+            this.PasswordBox = new System.Windows.Forms.TextBox();
             this.RegisterPanel = new System.Windows.Forms.Panel();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -69,72 +69,19 @@
             this.LoginPane.Size = new System.Drawing.Size(800, 600);
             this.LoginPane.TabIndex = 0;
             // 
-            // PasswordBox
+            // textBox1
             // 
-            this.PasswordBox.BackColor = System.Drawing.SystemColors.InfoText;
-            this.PasswordBox.ForeColor = System.Drawing.SystemColors.Window;
-            this.PasswordBox.Location = new System.Drawing.Point(393, 259);
-            this.PasswordBox.MaxLength = 16;
-            this.PasswordBox.Name = "PasswordBox";
-            this.PasswordBox.PasswordChar = '*';
-            this.PasswordBox.Size = new System.Drawing.Size(120, 23);
-            this.PasswordBox.TabIndex = 0;
-            this.PasswordBox.Text = "1234567890123456";
-            this.PasswordBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
-            // UsernameBox
-            // 
-            this.UsernameBox.BackColor = System.Drawing.SystemColors.MenuText;
-            this.UsernameBox.ForeColor = System.Drawing.SystemColors.Window;
-            this.UsernameBox.Location = new System.Drawing.Point(393, 230);
-            this.UsernameBox.MaxLength = 16;
-            this.UsernameBox.Name = "UsernameBox";
-            this.UsernameBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.UsernameBox.Size = new System.Drawing.Size(120, 23);
-            this.UsernameBox.TabIndex = 1;
-            this.UsernameBox.Text = "1234567890123456";
-            // 
-            // Ltxt1
-            // 
-            this.Ltxt1.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Ltxt1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Ltxt1.ForeColor = System.Drawing.SystemColors.Window;
-            this.Ltxt1.Location = new System.Drawing.Point(324, 233);
-            this.Ltxt1.Name = "Ltxt1";
-            this.Ltxt1.ReadOnly = true;
-            this.Ltxt1.Size = new System.Drawing.Size(63, 16);
-            this.Ltxt1.TabIndex = 2;
-            this.Ltxt1.Text = "Username:";
-            // 
-            // Ltxt2
-            // 
-            this.Ltxt2.BackColor = System.Drawing.SystemColors.MenuText;
-            this.Ltxt2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Ltxt2.ForeColor = System.Drawing.SystemColors.Window;
-            this.Ltxt2.Location = new System.Drawing.Point(324, 262);
-            this.Ltxt2.Name = "Ltxt2";
-            this.Ltxt2.ReadOnly = true;
-            this.Ltxt2.Size = new System.Drawing.Size(63, 16);
-            this.Ltxt2.TabIndex = 3;
-            this.Ltxt2.Text = "Password:";
-            // 
-            // LoginButton
-            // 
-            this.LoginButton.BackColor = System.Drawing.Color.DimGray;
-            this.LoginButton.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LoginButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.LoginButton.ForeColor = System.Drawing.Color.White;
-            this.LoginButton.Location = new System.Drawing.Point(393, 300);
-            this.LoginButton.MaxLength = 16;
-            this.LoginButton.Name = "LoginButton";
-            this.LoginButton.ReadOnly = true;
-            this.LoginButton.Size = new System.Drawing.Size(63, 16);
-            this.LoginButton.TabIndex = 4;
-            this.LoginButton.Text = "Login";
-            this.LoginButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.LoginButton.MouseEnter += new System.EventHandler(this.LoginButton_MouseEnter);
-            this.LoginButton.MouseLeave += new System.EventHandler(this.LoginButton_MouseLeave);
-            this.LoginButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LoginButton_MouseUp);
+            this.textBox1.BackColor = System.Drawing.SystemColors.MenuText;
+            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
+            this.textBox1.Location = new System.Drawing.Point(656, 572);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(63, 16);
+            this.textBox1.TabIndex = 6;
+            this.textBox1.Text = "New User?";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // RegisterPageButton
             // 
@@ -154,18 +101,72 @@
             this.RegisterPageButton.MouseLeave += new System.EventHandler(this.RegisterPageButton_MouseLeave);
             this.RegisterPageButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.RegisterPageButton_MouseUp);
             // 
-            // textBox1
+            // LoginButton
             // 
-            this.textBox1.BackColor = System.Drawing.SystemColors.MenuText;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.ForeColor = System.Drawing.SystemColors.Window;
-            this.textBox1.Location = new System.Drawing.Point(656, 572);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(63, 16);
-            this.textBox1.TabIndex = 6;
-            this.textBox1.Text = "New User?";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LoginButton.BackColor = System.Drawing.Color.DimGray;
+            this.LoginButton.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LoginButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.LoginButton.ForeColor = System.Drawing.Color.White;
+            this.LoginButton.Location = new System.Drawing.Point(393, 300);
+            this.LoginButton.MaxLength = 16;
+            this.LoginButton.Name = "LoginButton";
+            this.LoginButton.ReadOnly = true;
+            this.LoginButton.Size = new System.Drawing.Size(63, 16);
+            this.LoginButton.TabIndex = 4;
+            this.LoginButton.Text = "Login";
+            this.LoginButton.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.LoginButton.MouseEnter += new System.EventHandler(this.LoginButton_MouseEnter);
+            this.LoginButton.MouseLeave += new System.EventHandler(this.LoginButton_MouseLeave);
+            this.LoginButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.LoginButton_MouseUp);
+            // 
+            // Ltxt2
+            // 
+            this.Ltxt2.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Ltxt2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Ltxt2.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Ltxt2.ForeColor = System.Drawing.SystemColors.Window;
+            this.Ltxt2.Location = new System.Drawing.Point(324, 262);
+            this.Ltxt2.Name = "Ltxt2";
+            this.Ltxt2.ReadOnly = true;
+            this.Ltxt2.Size = new System.Drawing.Size(63, 16);
+            this.Ltxt2.TabIndex = 3;
+            this.Ltxt2.Text = "Password:";
+            // 
+            // Ltxt1
+            // 
+            this.Ltxt1.BackColor = System.Drawing.SystemColors.MenuText;
+            this.Ltxt1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Ltxt1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Ltxt1.ForeColor = System.Drawing.SystemColors.Window;
+            this.Ltxt1.Location = new System.Drawing.Point(324, 233);
+            this.Ltxt1.Name = "Ltxt1";
+            this.Ltxt1.ReadOnly = true;
+            this.Ltxt1.Size = new System.Drawing.Size(63, 16);
+            this.Ltxt1.TabIndex = 2;
+            this.Ltxt1.Text = "Username:";
+            // 
+            // UsernameBox
+            // 
+            this.UsernameBox.BackColor = System.Drawing.SystemColors.MenuText;
+            this.UsernameBox.ForeColor = System.Drawing.SystemColors.Window;
+            this.UsernameBox.Location = new System.Drawing.Point(393, 230);
+            this.UsernameBox.MaxLength = 16;
+            this.UsernameBox.Name = "UsernameBox";
+            this.UsernameBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.UsernameBox.Size = new System.Drawing.Size(120, 23);
+            this.UsernameBox.TabIndex = 1;
+            // 
+            // PasswordBox
+            // 
+            this.PasswordBox.BackColor = System.Drawing.SystemColors.InfoText;
+            this.PasswordBox.ForeColor = System.Drawing.SystemColors.Window;
+            this.PasswordBox.Location = new System.Drawing.Point(393, 259);
+            this.PasswordBox.MaxLength = 16;
+            this.PasswordBox.Name = "PasswordBox";
+            this.PasswordBox.PasswordChar = '*';
+            this.PasswordBox.Size = new System.Drawing.Size(120, 23);
+            this.PasswordBox.TabIndex = 0;
+            this.PasswordBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // RegisterPanel
             // 
@@ -193,6 +194,7 @@
             // 
             this.textBox2.BackColor = System.Drawing.SystemColors.MenuText;
             this.textBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.textBox2.Cursor = System.Windows.Forms.Cursors.Default;
             this.textBox2.ForeColor = System.Drawing.SystemColors.Window;
             this.textBox2.Location = new System.Drawing.Point(267, 291);
             this.textBox2.Name = "textBox2";
@@ -212,12 +214,12 @@
             this.textBox3.PasswordChar = '*';
             this.textBox3.Size = new System.Drawing.Size(120, 23);
             this.textBox3.TabIndex = 9;
-            this.textBox3.Text = "1234567890123456";
             // 
             // Rtxt1
             // 
             this.Rtxt1.BackColor = System.Drawing.SystemColors.MenuText;
             this.Rtxt1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Rtxt1.Cursor = System.Windows.Forms.Cursors.Default;
             this.Rtxt1.ForeColor = System.Drawing.SystemColors.Window;
             this.Rtxt1.Location = new System.Drawing.Point(324, 204);
             this.Rtxt1.Name = "Rtxt1";
@@ -237,12 +239,12 @@
             this.REmailBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.REmailBox.Size = new System.Drawing.Size(120, 23);
             this.REmailBox.TabIndex = 7;
-            this.REmailBox.Text = "swagblaster@gmail.com";
             // 
             // Rtxt4
             // 
             this.Rtxt4.BackColor = System.Drawing.SystemColors.MenuText;
             this.Rtxt4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Rtxt4.Cursor = System.Windows.Forms.Cursors.Default;
             this.Rtxt4.ForeColor = System.Drawing.SystemColors.Window;
             this.Rtxt4.Location = new System.Drawing.Point(619, 572);
             this.Rtxt4.Name = "Rtxt4";
@@ -292,6 +294,7 @@
             // 
             this.Rtxt3.BackColor = System.Drawing.SystemColors.MenuText;
             this.Rtxt3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Rtxt3.Cursor = System.Windows.Forms.Cursors.Default;
             this.Rtxt3.ForeColor = System.Drawing.SystemColors.Window;
             this.Rtxt3.Location = new System.Drawing.Point(324, 262);
             this.Rtxt3.Name = "Rtxt3";
@@ -304,6 +307,7 @@
             // 
             this.Rtxt2.BackColor = System.Drawing.SystemColors.MenuText;
             this.Rtxt2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.Rtxt2.Cursor = System.Windows.Forms.Cursors.Default;
             this.Rtxt2.ForeColor = System.Drawing.SystemColors.Window;
             this.Rtxt2.Location = new System.Drawing.Point(324, 233);
             this.Rtxt2.Name = "Rtxt2";
@@ -322,7 +326,6 @@
             this.RUsernameBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.RUsernameBox.Size = new System.Drawing.Size(120, 23);
             this.RUsernameBox.TabIndex = 1;
-            this.RUsernameBox.Text = "1234567890123456";
             // 
             // RPasswordBox
             // 
@@ -334,7 +337,6 @@
             this.RPasswordBox.PasswordChar = '*';
             this.RPasswordBox.Size = new System.Drawing.Size(120, 23);
             this.RPasswordBox.TabIndex = 0;
-            this.RPasswordBox.Text = "1234567890123456";
             // 
             // GUI
             // 
@@ -351,6 +353,7 @@
             this.MinimumSize = new System.Drawing.Size(816, 639);
             this.Name = "GUI";
             this.Text = "Dirty Water Client";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.LoginPane.ResumeLayout(false);
             this.LoginPane.PerformLayout();
             this.RegisterPanel.ResumeLayout(false);

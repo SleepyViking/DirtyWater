@@ -13,3 +13,11 @@ C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWaterClient\DirtyWaterClient\o
 C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.csprojResolveAssemblyReference.cache
 C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.exe
 C:\Users\Sheldon\Documents\GitHub\DirtyWater\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.pdb
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.exe.config
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.exe
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.pdb
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.exe
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\bin\Debug\DirtyWaterClient.pdb
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.csprojResolveAssemblyReference.cache
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.GUI.resources
+C:\Users\Grandma\Desktop\Programming\DirtyWater\DirtyWaterClient\DirtyWaterClient\obj\Debug\DirtyWaterClient.csproj.GenerateResource.Cache

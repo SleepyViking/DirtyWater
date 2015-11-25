@@ -5,61 +5,65 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DirtyWaterClient
 {
     class Program
     {
-        private static Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+        //private static Socket _clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        [STAThread]
         static void Main(string[] args)
         {
-            Console.Title = "Client";
-            LoopConnect();
-            SendLoop(new MetaMenu());
-            Console.ReadLine();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new GUI());
+            //Console.Title = "Client";
+            //LoopConnect();
+            //SendLoop(new MetaMenu());
+            //Console.ReadLine();
         }
 
-        private static void SendLoop(MetaMenu m)
-        {
-            while (true)
-            {
-                byte[] buffer = m.Prompt();
-                Console.WriteLine("Request Sending...");
-                _clientSocket.Send(buffer);
-                Console.WriteLine("Request Sent");
+        //private static void SendLoop(MetaMenu m)
+        //{
+        //    while (true)
+        //    {
+        //        byte[] buffer = m.Prompt();
+        //        //Console.WriteLine("Request Sending...");
+        //        //_clientSocket.Send(buffer);
+        //        //Console.WriteLine("Request Sent");
 
-                byte[] receivedBuf = new byte[128];
-                int rec = _clientSocket.Receive(receivedBuf);
-                byte[] data = new byte[rec];
-                Array.Copy(receivedBuf, data, rec);
-                Console.WriteLine("Received: " + Encoding.ASCII.GetString(data));
-            }
-        }
+        //        //byte[] receivedBuf = new byte[128];
+        //        //int rec = _clientSocket.Receive(receivedBuf);
+        //        //byte[] data = new byte[rec];
+        //        //Array.Copy(receivedBuf, data, rec);
+        //        //Console.WriteLine("Received: " + Encoding.ASCII.GetString(data));
+        //    }
+        //}
 
-        private static void LoopConnect()
-        {
-            int attempts = 0;
+        //private static void LoopConnect()
+        //{
+        //    //int attempts = 0;
 
-            //IPAddress[] IPs = Dns.GetHostAddresses("107.191.103.148");
-            IPAddress[] IPs = Dns.GetHostAddresses("127.0.0.1");
+        //    IPAddress[] IPs = Dns.GetHostAddresses("107.191.103.148");
+        //    //IPAddress[] IPs = Dns.GetHostAddresses("127.0.0.1");
 
-            while (!_clientSocket.Connected)
-            {
-                try
-                {
-                    attempts++;
-                    _clientSocket.Connect(IPs[0], 100);
-                }
-                catch (SocketException)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Connection attempts: " + attempts.ToString());
-                }
-            }
+        //    while (!_clientSocket.Connected)
+        //    {
+        //        try
+        //        {
+        //            //attempts++;
+        //            _clientSocket.Connect(IPs[0], 100);
+        //        }
+        //        catch (SocketException)
+        //        {
+        //            //Console.Clear();
+        //            //Console.WriteLine("Connection attempts: " + attempts.ToString());
+        //        }
+        //    }
 
-            Console.Clear();
-            Console.WriteLine("Connected");
-        }
+        //    //Console.Clear();
+        //    //Console.WriteLine("Connected");
+        //}
     }
 }
