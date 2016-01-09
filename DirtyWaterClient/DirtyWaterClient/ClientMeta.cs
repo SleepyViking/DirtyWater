@@ -15,7 +15,7 @@ namespace DirtyWaterClient
         /// INBOUND SECTION
         /// </summary>
 
-        enum Notify : int
+        public enum Notify : int
         {
             //EXAMPLE:
             LOGIN = 'L' << 8,               
@@ -28,92 +28,43 @@ namespace DirtyWaterClient
 
         }
 
-        public static void ParseIn(ref byte[] data)
-        {
-            int reply = (data[0] << 8) | data[1];
-
-            switch (reply)
-            {
-                case (int)Notify.LOGIN:
-                    if (data[6] == 0) {
-                        Console.WriteLine("You have successfully logged in. Welcome.");
-                    }
-                    break;
-
-                case (int)Notify.LOGOUT:
-                    if (data[6] == 0)
-                    {
-                        Console.WriteLine("You have successfully logged in. Welcome.");
-                    }
-                    break;
-
-                case (int)Notify.REGISTER:
-                    if (data[6] == 0)
-                    {
-                        Console.WriteLine("You have successfully logged in. Welcome.");
-                    }
-                    break;
-
-                case (int)Notify.BAN:
-
-                    break;
-
-                case (int)Notify.KICK:
-
-                    break;
-
-                default: break;
-
-
-            }
-
-        }
-
-
-
-
         /// <summary>
         /// OUTBOUND SECTION
         /// </summary>
 
         public static string request = "";
 
-        public static byte[] Login(string username, SecureString password) {
-            request = "@L\x00" + username.PadRight(16, '\0') + ToUnsecureString(password).PadRight(16, '\0') + '?';  
-            return Serialize(request);
-        }
+        public static byte[] Login(string username, SecureString password){
+            byte[] pass = ToBytes(password);    //pass is now the unsecure bytes in password
+            password.Dispose();                 //password is destroyed
+            HashPassword(ref pass, username);   //pass is transformed to the hashed bytes
 
-        public static byte[] Login(string username, string password)
-        {
-            request = "@L\x00" + username.PadRight(16, '\0') + password.PadRight(16, '\0') + '?';
+            request = "@L\x00" + username.PadRight(16, '\0') + Encoding.ASCII.GetString(pass) + '?';
             return Serialize(request);
         }
 
         public static byte[] Logout(string username) {
-
             request = "@LO" + username.PadRight(16, '\0') +'?';
+
             return Serialize(request);
         }
-
 
         public static byte[] Register(string username, SecureString password, string email) {
+            byte[] pass = ToBytes(password);    //pass is now the unsecure bytes in password
+            password.Dispose();                 //password is destroyed
+            HashPassword(ref pass, username);   //pass is transformed to the hashed bytes
 
-            request = "@R\x00" + username.PadRight(16, '\0') + ToUnsecureString(password).PadRight(16, '\0') + email.PadRight(64, '\0') + '?';
+            request = "@R\x00" + username.PadRight(16, '\0') + Encoding.ASCII.GetString(pass) + email.PadRight(64, '\0') + '?';
             return Serialize(request);
 
         }
-
-        public static byte[] Register(string username, string password, string email)
-        {
-
-            request = "@R\x00" + username.PadRight(16, '\0') + password.PadRight(16, '\0') + email.PadRight(64, '\0') + '?';
-            return Serialize(request);
-        }
-
 
         public static byte[] Unregister(string username, SecureString password) {
+            byte[] pass = ToBytes(password);    //pass is now the unsecure bytes in password
+            password.Dispose();                 //password is destroyed
+            HashPassword(ref pass, username);   //pass is transformed to the hashed bytes
 
-            request = "@U\x00" + username.PadRight(16, '\0') + ToUnsecureString(password).PadRight(16, '\0') + '?'; 
+            request = "@U\x00" + username.PadRight(16, '\0') + Encoding.ASCII.GetString(pass) + '?'; 
             return Serialize(request);
         }
 
@@ -123,26 +74,51 @@ namespace DirtyWaterClient
             return bytes;
         }
 
-        public static string ToUnsecureString(SecureString securePassword)
+        public static void HashPassword(ref byte[] password, string username)
         {
-            if (securePassword == null)
-                throw new ArgumentNullException("securePassword");
+            byte[] salt = new byte[32];
+            salt = Encoding.ASCII.GetBytes("DNGNLORDGODPUNCH" + username);
 
-            IntPtr unmanagedString = IntPtr.Zero;
+            password = PBKDF2(ref password, salt, 1024, 16);
+        }
+
+
+
+        public static byte[] ToBytes(SecureString securePassword)
+        {
+            Encoding encoding = Encoding.ASCII;
+
+            if (securePassword == null) {
+                throw new ArgumentException(nameof(SecureString));
+            }
+
+            IntPtr umString = IntPtr.Zero;
+
             try
             {
-                unmanagedString = Marshal.SecureStringToGlobalAllocUnicode(securePassword);
-                return Marshal.PtrToStringUni(unmanagedString);
+                umString = Marshal.SecureStringToGlobalAllocAnsi(securePassword);
+                return encoding.GetBytes(Marshal.PtrToStringAnsi(umString));
             }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(unmanagedString);
+            finally {
+                if(umString != IntPtr.Zero) {
+                    Marshal.ZeroFreeGlobalAllocAnsi(umString);
+                }
+
             }
+
         }
 
-        public static string SaltNHash(string s) {
-            return s;
+        private static byte[] PBKDF2(ref byte[] password, byte[] salt, int iterations, int outputBytes)
+        {
+            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations);
+            //pbkdf2.IterationCount = iterations;
+            for (int i = 0; i < password.Length; i++) {
+                password[i] = 0; //Manually destroy the plaintext password in bytes
+            }
+
+            return pbkdf2.GetBytes(outputBytes); //at the call location, password is transformed into these bytes
         }
+
 
     }
 }

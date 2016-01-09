@@ -43,6 +43,7 @@ namespace DirtyWater
                 conn = new MySqlConnection(connectionString);
                 conn.Open();
                 return true;
+
             }
             catch (MySqlException e)
             {
@@ -112,7 +113,6 @@ namespace DirtyWater
                     case (int)Req.REGISTER:
                         Console.WriteLine("Registering user {0}...", data[0], data[1]);
                         reply = Register(data[0], data[1], data[2] + data[3] + data[4] + data[5]); //username, password, email
-                        Console.WriteLine("Registered.");
                         break;
 
                     default:
@@ -174,11 +174,15 @@ namespace DirtyWater
 
         public static int Logout(string username)
         {
+            time = string.Format("{0:yyyy.MM.dd 0:HH:mm:ss tt}", DateTime.Now);
+
             try
             {
+
                 MySqlCommand cmd = new MySqlCommand();
-                cmd.CommandText = "UPDATE login VALUES (@username, @email, @hash, @salt, 'NEW USER', 'NEW USER')";
+                cmd.CommandText = "UPDATE login SET lastout = '@time' WHERE username='@username'";
                 cmd.Connection = conn;
+                cmd.Parameters.AddWithValue("@time", time);
                 cmd.Parameters.AddWithValue("@username", username);
                 cmd.ExecuteNonQuery();
                 return 0;
@@ -198,37 +202,47 @@ namespace DirtyWater
         }
 
         public static int Register(string username, string passhash, string email) {
-            Console.WriteLine(">> REGISTER: " + passhash + " " + passhash.Length);
+            Console.WriteLine(">> REGISTERING : " + username);
             //Create a new SQL entry for username
             //As with login, mark time and IP of registration
             //Also mark their email address, for use in sending out mass emails and all that junk
             // IF THE USER EXISTS, RETURN THAT THE USER EXISTS
             //Return a prompt to login, as well as verifying the success of registration
 
-
             RNGCryptoServiceProvider csprng = new RNGCryptoServiceProvider();
 
             byte[] salt = new byte[SALT_BYTE_SIZE];
             csprng.GetBytes(salt);
 
-            
-
             byte[] hash = PBKDF2(passhash, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
                        
             try {
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.CommandText = "INSERT INTO login VALUES (@username, @email, @hash, @salt, 'NEW USER', 'NEW USER')";
-                cmd.Connection = conn;
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@email", email);
-                cmd.Parameters.AddWithValue("@hash", hash);
-                cmd.Parameters.AddWithValue("@salt", salt);
-                cmd.ExecuteNonQuery();
-                return 0;
-            } catch (MySqlException e)
+                if(!Exists(username))   //As long as the account does not exist,
+                {
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.CommandText = "INSERT INTO login VALUES (@username, @email, @hash, @salt, 'NEW USER', 'NEW USER')";
+                    cmd.Connection = conn;
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@hash", hash);
+                    cmd.Parameters.AddWithValue("@salt", salt);
+                    cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(">> REGISTERED " + username + ".");
+                    return 0;   //Successfully added user
+                }
+                else
+                {
+                    Console.WriteLine(">> FAILED, USER " + username + " ALREADY EXISTS!");
+                    return 2;   //User already exists
+                }
+
+            }
+            catch (MySqlException e)
             {
                 Console.WriteLine(e + "\n\n" + e.Number);
-                return 1;
+                Console.WriteLine(">> FAILED TO REGISTER " + username + ".");
+                return 1;       //Registration failed for another reason
             }
 
         }
@@ -237,7 +251,7 @@ namespace DirtyWater
             // A block to do the validation step common with most of the
             // meta requests. Checks the username and password against a 
             // the database, and also checks to see if 
-            Console.WriteLine("> VALIDATING " + username);
+            Console.WriteLine("> VALIDATING " + username + "...");
 
 
             query = "SELECT * FROM login WHERE (username = '" + username + "')";
@@ -275,13 +289,51 @@ namespace DirtyWater
             }
             else if (correctHashBytes.Length < 0)
             {
-                Console.WriteLine("User not found");
+                Console.WriteLine("> User not found");
             }
             else
             {
-                Console.WriteLine("Invalid Username or Password");
+                Console.WriteLine("> Invalid Username or Password");
             }
             return false;
+
+        }
+
+        public static bool Exists(string username)
+        {
+            // A block to do the validation step common with most of the
+            // meta requests. Checks the username and password against a 
+            // the database, and also checks to see if 
+            Console.WriteLine("> VALIDATING " + username);
+            string q = "";
+
+            query = "SELECT * FROM login WHERE (username = '" + username + "')";
+            cmd = new MySqlCommand(query, conn);
+            rdr = cmd.ExecuteReader();
+            try
+            {
+                while (rdr.Read())
+                {
+                    q = (string)rdr["username"];
+                }
+            }
+            catch (MySqlException e)
+            {
+                Console.WriteLine(e + "\n\n " + e.Number);
+            }
+
+            rdr.Close();
+
+            if (q.Length == 0)
+            {
+                Console.WriteLine("> User not found.");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("> User Exists!");
+                return true;
+            }
 
         }
 
